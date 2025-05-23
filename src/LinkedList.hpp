@@ -88,9 +88,9 @@ public:
         if (position < 0 || position >= size) {
             throw MyException();
         }
-        Node<T>* toDelete = nullptr;
+        Node<T>* toRemove = nullptr;
         if (position == 0) {
-            toDelete = head;
+            toRemove = head;
             head = head->next;
             if (!head) tail = nullptr;
         } else {
@@ -98,13 +98,13 @@ public:
             for (int i = 0; i < position - 1; ++i) {
                 current = current->next;
             }
-            toDelete = current->next;
-            current->next = toDelete->next;
-            if (toDelete == tail) {
+            toRemove = current->next;
+            current->next = toRemove->next;
+            if (toRemove == tail) {
                 tail = current;
             }
         }
-        delete toDelete;
+        delete toRemove;
         --size;
     }
 
