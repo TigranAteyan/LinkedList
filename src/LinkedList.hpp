@@ -2,37 +2,36 @@
 #define LINKEDLIST_H
 
 #include <iostream>
-#include "MyException.hpp"
-
-template <typename T>
-class Node {
-public:
-    T data;
-    Node<T>* next;
-    Node(const T& value) : data(value), next(nullptr) {}
-};
+#include "IndexOutOfBounds.hpp"
 
 template <typename T>
 class LinkedList {
 private:
-    Node<T>* head;
-    Node<T>* tail;
+    class Node {
+    public:
+        T data;
+        Node* next;
+        Node(const T& value) : data(value), next(nullptr) {}
+    };
+
+    Node* head;
+    Node* tail;
     int size;
 
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
     ~LinkedList() {
-        Node<T>* current = head;
+        Node* current = head;
         while (current) {
-            Node<T>* next = current->next;
+            Node* next = current->next;
             delete current;
             current = next;
         }
     }
 
     void InsertHead(const T& value) {
-        Node<T>* newNode = new Node<T>(value);
+        Node* newNode = new Node(value);
         if (!head) {
             head = tail = newNode;
         } else {
@@ -43,7 +42,7 @@ public:
     }
 
     void InsertTail(const T& value) {
-        Node<T>* newNode = new Node<T>(value);
+        Node* newNode = new Node(value);
         if (!tail) {
             head = tail = newNode;
         } else {
@@ -55,15 +54,15 @@ public:
 
     void Insert(const int& position, const T& value) {
         if (position < 0 || position > size) {
-            throw MyException();
+            throw IndexOutOfBounds();
         }
         if (position == 0) {
             InsertHead(value);
         } else if (position == size) {
             InsertTail(value);
         } else {
-            Node<T>* newNode = new Node<T>(value);
-            Node<T>* current = head;
+            Node* newNode = new Node(value);
+            Node* current = head;
             for (int i = 0; i < position - 1; ++i) {
                 current = current->next;
             }
@@ -75,9 +74,9 @@ public:
 
     T Get(const int& position) const {
         if (position < 0 || position >= size) {
-            throw MyException();
+            throw IndexOutOfBounds();
         }
-        Node<T>* current = head;
+        Node* current = head;
         for (int i = 0; i < position; ++i) {
             current = current->next;
         }
@@ -86,15 +85,15 @@ public:
 
     void Remove(const int& position) {
         if (position < 0 || position >= size) {
-            throw MyException();
+            throw IndexOutOfBounds();
         }
-        Node<T>* toRemove = nullptr;
+        Node* toRemove = nullptr;
         if (position == 0) {
             toRemove = head;
             head = head->next;
             if (!head) tail = nullptr;
         } else {
-            Node<T>* current = head;
+            Node* current = head;
             for (int i = 0; i < position - 1; ++i) {
                 current = current->next;
             }
@@ -113,7 +112,7 @@ public:
     }
 
     void PrintAll() const {
-        Node<T>* current = head;
+        Node* current = head;
         while (current) {
             std::cout << current->data << std::endl;
             current = current->next;
