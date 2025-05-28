@@ -51,11 +51,12 @@ TEST(LinkedListTest, RemoveElement) {
 TEST(LinkedListTest, OutOfRangeGet) {
     LinkedList<int> list;
     list.InsertTail(1);
-    EXPECT_THROW(list.Get(5), MyException);
+    EXPECT_THROW(list.Get(5), IndexOutOfBounds);
 }
 
 TEST(LinkedListTest, OutOfRangeRemove) {
     LinkedList<int> list;
     list.InsertTail(1);
-    EXPECT_THROW(list.Remove(3), MyException);
+    EXPECT_THROW(list.Remove(3), IndexOutOfBounds);
 }
+
