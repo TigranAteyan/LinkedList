@@ -1,8 +1,8 @@
-#ifndef MYEXCEPTION_H
-#define MYEXCEPTION_H
+#ifndef INDEXOUTOFBOUNDS_H
+#define INDEXOUTOFBOUNDS_H
 #include <exception>
 
-class MyException : public std::exception {
+class IndexOutOfBounds : public std::exception {
 public:
     const char* what() const noexcept override {
         return "Invalid input!";
