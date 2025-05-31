@@ -21,10 +21,27 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
+    LinkedList(const LinkedList& other)
+    {
+        Node* current = other.head;
+        while (current)
+        {
+            this->InsertTail(current->data);
+            current = current->next;
+        }
+    }
+
+    LinkedList(LinkedList&& other) : head(other.head), tail(other.tail), size(other.size) 
+    {
+        other.head = nullptr;
+        other.tail = nullptr;
+        other.size = 0;
+    }
+
     ~LinkedList() {
         Node* current = head;
         while (current) {
-            Node* next = current->next;
+            Node* next = current->next; 
             delete current;
             current = next;
         }
@@ -118,6 +135,44 @@ public:
             current = current->next;
         }
     }
+
+    LinkedList& operator=(const LinkedList& other) {
+        if (this != &other) {
+            while (head) {
+                Node* temp = head;
+                head = head->next;
+                delete temp;
+            }
+            head = tail = nullptr;
+            size = 0;
+
+            Node* current = other.head;
+            while (current) {
+                InsertTail(current->data);
+                current = current->next;
+            }
+        }
+        return *this;
+    }
+
+    LinkedList& operator=(LinkedList&& other) noexcept {
+        if (this != &other) {
+            while (head) {
+                Node* temp = head;
+                head = head->next;
+                delete temp;
+            }
+            
+            head = other.head;
+            tail = other.tail;
+            size = other.size;
+            other.head = nullptr;
+            other.tail = nullptr;
+            other.size = 0;
+        }
+        return *this;
+    }
+
 };
 
 #endif
