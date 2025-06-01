@@ -2,6 +2,7 @@
 #define LINKEDLIST_H
 
 #include <iostream>
+#include <utility>  
 #include "IndexOutOfBounds.hpp"
 
 template <typename T>
@@ -21,30 +22,33 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-    LinkedList(const LinkedList& other)
-    {
+    LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
         Node* current = other.head;
-        while (current)
-        {
-            this->InsertTail(current->data);
+        while (current) {
+            InsertTail(current->data);
             current = current->next;
         }
     }
 
-    LinkedList(LinkedList&& other) : head(other.head), tail(other.tail), size(other.size) 
-    {
+    LinkedList(LinkedList&& other) noexcept : head(other.head), tail(other.tail), size(other.size) {
         other.head = nullptr;
         other.tail = nullptr;
         other.size = 0;
     }
 
     ~LinkedList() {
+        Clear();
+    }
+
+    void Clear() {
         Node* current = head;
         while (current) {
-            Node* next = current->next; 
+            Node* next = current->next;
             delete current;
             current = next;
         }
+        head = tail = nullptr;
+        size = 0;
     }
 
     void InsertHead(const T& value) {
@@ -138,31 +142,17 @@ public:
 
     LinkedList& operator=(const LinkedList& other) {
         if (this != &other) {
-            while (head) {
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-            }
-            head = tail = nullptr;
-            size = 0;
-
-            Node* current = other.head;
-            while (current) {
-                InsertTail(current->data);
-                current = current->next;
-            }
+            LinkedList temp(other);
+            std::swap(head, temp.head);
+            std::swap(tail, temp.tail);
+            std::swap(size, temp.size);
         }
         return *this;
     }
 
     LinkedList& operator=(LinkedList&& other) noexcept {
         if (this != &other) {
-            while (head) {
-                Node* temp = head;
-                head = head->next;
-                delete temp;
-            }
-            
+            Clear();
             head = other.head;
             tail = other.tail;
             size = other.size;
@@ -172,7 +162,6 @@ public:
         }
         return *this;
     }
-
 };
 
 #endif
