@@ -22,7 +22,7 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-    LinkedList(const LinkedList& other) {
+    LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
         Node* current = other.head;
         while (current) {
             InsertTail(current->data);
