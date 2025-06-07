@@ -22,7 +22,7 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-    LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
+    LinkedList(const LinkedList& other) {
         Node* current = other.head;
         while (current) {
             InsertTail(current->data);
@@ -142,10 +142,12 @@ public:
 
     LinkedList& operator=(const LinkedList& other) {
         if (this != &other) {
-            LinkedList temp(other);
-            std::swap(head, temp.head);
-            std::swap(tail, temp.tail);
-            std::swap(size, temp.size);
+            Clear();
+            Node* current = other.head;
+            while (current) {
+                InsertTail(current->data);
+                current = current->next;
+            }
         }
         return *this;
     }
