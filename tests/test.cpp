@@ -1,5 +1,6 @@
 #include "LinkedList.hpp"
 #include <gtest/gtest.h>
+#include <algorithm>
 
 TEST(LinkedListTest, InsertHead_ShouldIncreaseSizeTo1) {
     LinkedList<int> list;
@@ -130,4 +131,83 @@ TEST(LinkedListTest, MoveAssignment_ShouldTransferOwnership) {
     EXPECT_EQ(moved.Get(0), 1);
     EXPECT_EQ(moved.Get(1), 2);
     EXPECT_EQ(list.Size(), 0);
+}
+
+TEST(LinkedListIteratorTest, EmptyListBeginEqualsEnd) {
+    LinkedList<int> list;
+    EXPECT_EQ(list.begin(), list.end());
+}
+
+TEST(LinkedListIteratorTest, IterateOverElements) {
+    LinkedList<int> list;
+    list.InsertTail(10);
+    list.InsertTail(20);
+    list.InsertTail(30);
+
+    int expected[] = {10, 20, 30};
+    int idx = 0;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        EXPECT_EQ(*it, expected[idx++]);
+    }
+    EXPECT_EQ(idx, list.Size());
+}
+
+TEST(LinkedListIteratorTest, IteratorPostfixIncrement) {
+    LinkedList<int> list;
+    list.InsertTail(42);
+    auto it = list.begin();
+    auto it2 = it++;
+    EXPECT_EQ(*it2, 42);
+    EXPECT_EQ(it, list.end());
+}
+
+TEST(LinkedListIteratorTest, IteratorEquality) {
+    LinkedList<int> list;
+    list.InsertTail(1);
+    auto it1 = list.begin();
+    auto it2 = list.begin();
+    EXPECT_TRUE(it1 == it2);
+    ++it2;
+    EXPECT_TRUE(it1 != it2);
+}
+
+TEST(LinkedListIteratorTest, FindElementUsingIterator) {
+    LinkedList<int> list;
+    list.InsertTail(1);
+    list.InsertTail(2);
+    list.InsertTail(3);
+
+    auto it = std::find(list.begin(), list.end(), 2);
+    ASSERT_NE(it, list.end());
+    EXPECT_EQ(*it, 2);
+
+    auto itNotFound = std::find(list.begin(), list.end(), 99);
+    EXPECT_EQ(itNotFound, list.end());
+}
+
+TEST(LinkedListIteratorTest, ConstIteratorWorks) {
+    const LinkedList<int> list = [](){
+        LinkedList<int> l;
+        l.InsertTail(5);
+        l.InsertTail(6);
+        return l;
+    }();
+
+    int expected[] = {5, 6};
+    int idx = 0;
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        EXPECT_EQ(*it, expected[idx++]);
+    }
+    EXPECT_EQ(idx, list.Size());
+}
+
+TEST(LinkedListIteratorTest, ForEachCallsFunctionOnAllElements) {
+    LinkedList<int> list;
+    list.InsertTail(1);
+    list.InsertTail(2);
+    list.InsertTail(3);
+
+    int sum = 0;
+    list.ForEach([&sum](int& x) { sum += x; });
+    EXPECT_EQ(sum, 6);
 }
