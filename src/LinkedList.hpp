@@ -2,6 +2,8 @@
 #define LINKEDLIST_H
 
 #include <iostream>
+#include <utility>
+#include <functional>
 #include "IndexOutOfBounds.hpp"
 
 template <typename T>
@@ -21,12 +23,47 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
+<<<<<<< HEAD
     LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
         Node* current = other.head;
         while (current) {
             InsertTail(current->data);
             current = current->next;
+=======
+    LinkedList(const LinkedList& other) : LinkedList() {
+        LinkedList temp; 
+        Node* current = other.head;
+        while (current) {
+            temp.InsertTail(current->data);
+            current = current->next;
         }
+        std::swap(head, temp.head);
+        std::swap(tail, temp.tail);
+        std::swap(size, temp.size);
+    }
+
+
+
+    LinkedList(LinkedList&& other) noexcept : head(other.head), tail(other.tail), size(other.size) {
+        other.head = nullptr;
+        other.tail = nullptr;
+        other.size = 0;
+    }
+
+    ~LinkedList() {
+        Clear();
+    }
+
+    void Clear() {
+        Node* current = head;
+        while (current) {
+            Node* next = current->next;
+            delete current;
+            current = next;
+>>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
+        }
+        head = tail = nullptr;
+        size = 0;
     }
 
     LinkedList(LinkedList&& other) noexcept : head(other.head), tail(other.tail), size(other.size) {
@@ -92,7 +129,7 @@ public:
         }
     }
 
-    T Get(const int& position) const {
+    T& Get(const int& position) const {
         if (position < 0 || position >= size) {
             throw IndexOutOfBounds();
         }
@@ -141,12 +178,19 @@ public:
 
     LinkedList& operator=(const LinkedList& other) {
         if (this != &other) {
+<<<<<<< HEAD
             Clear();
             Node* current = other.head;
             while (current) {
                 InsertTail(current->data);
                 current = current->next;
             }
+=======
+            LinkedList temp(other);           
+            std::swap(head, temp.head);       
+            std::swap(tail, temp.tail);
+            std::swap(size, temp.size);
+>>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
         }
         return *this;
     }
@@ -163,6 +207,77 @@ public:
         }
         return *this;
     }
+<<<<<<< HEAD
+=======
+
+    void ForEach(std::function<void(T&)> func) 
+    {
+        for (Iterator it = begin(); it != end(); ++it)
+        {
+            func(*it);
+        }
+    }
+
+    class Iterator {
+    private:
+        Node* it;
+    public:
+        Iterator(Node* ptr) : it(ptr) {}
+        Iterator() : it(nullptr) {}
+
+        Iterator& operator++() 
+        {
+            if (it) it = it->next;
+            return *this;
+        }
+
+        Iterator operator++(int) 
+        {
+            Iterator temp = *this;
+            if (it) it = it->next;
+            return temp;
+        }
+
+
+        bool operator!=(const Iterator& other) const { return it != other.it; }
+        bool operator==(const Iterator& other) const { return it == other.it; }
+
+        T& operator*() { return it->data; }
+    };
+
+    class ConstIterator {
+        const Node* it;
+    public:
+        ConstIterator(const Node* ptr) : it(ptr) {}
+        ConstIterator() : it(nullptr) {}
+
+        ConstIterator& operator++() 
+        {
+            if (it) it = it->next;
+            return *this;
+        }
+
+        const T& operator*() const { return it->data; }
+
+        bool operator!=(const ConstIterator& other) const { return it != other.it; }
+        bool operator==(const ConstIterator& other) const { return it == other.it; }
+    };
+
+    Iterator begin() const { return Iterator(head); }
+    Iterator end() const { return Iterator(nullptr); }
+    
+    ConstIterator cbegin() const { return ConstIterator(head); }
+    ConstIterator cend() const { return ConstIterator(nullptr); }
+
+
+    Iterator find(const T& value) {
+        for (Iterator it = begin(); it != end(); ++it) {
+            if (*it == value) return it;
+        }
+        return end();
+    }
+
+>>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
 };
 
 #endif
