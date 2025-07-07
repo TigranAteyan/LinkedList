@@ -180,6 +180,12 @@ public:
     private:
         Node* it;
     public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = T*;
+        using reference = T&;
+
         Iterator(Node* ptr) : it(ptr) {}
         Iterator() : it(nullptr) {}
 
@@ -206,6 +212,12 @@ public:
     class ConstIterator {
         const Node* it;
     public:
+        using iterator_category = std::forward_iterator_tag;
+        using value_type = T;
+        using difference_type = std::ptrdiff_t;
+        using pointer = const T*;
+        using reference = const T&;
+
         ConstIterator(const Node* ptr) : it(ptr) {}
         ConstIterator() : it(nullptr) {}
 
@@ -221,12 +233,14 @@ public:
         bool operator==(const ConstIterator& other) const { return it == other.it; }
     };
 
-    Iterator begin() const { return Iterator(head); }
-    Iterator end() const { return Iterator(nullptr); }
-    
+    Iterator begin() { return Iterator(head); }
+    Iterator end() { return Iterator(nullptr); }
+
+    ConstIterator begin() const { return ConstIterator(head); }
+    ConstIterator end() const { return ConstIterator(nullptr); }
+
     ConstIterator cbegin() const { return ConstIterator(head); }
     ConstIterator cend() const { return ConstIterator(nullptr); }
-
 
     Iterator find(const T& value) {
         for (Iterator it = begin(); it != end(); ++it) {
