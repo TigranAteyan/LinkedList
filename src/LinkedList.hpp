@@ -23,13 +23,6 @@ private:
 public:
     LinkedList() : head(nullptr), tail(nullptr), size(0) {}
 
-<<<<<<< HEAD
-    LinkedList(const LinkedList& other) : head(nullptr), tail(nullptr), size(0) {
-        Node* current = other.head;
-        while (current) {
-            InsertTail(current->data);
-            current = current->next;
-=======
     LinkedList(const LinkedList& other) : LinkedList() {
         LinkedList temp; 
         Node* current = other.head;
@@ -40,30 +33,6 @@ public:
         std::swap(head, temp.head);
         std::swap(tail, temp.tail);
         std::swap(size, temp.size);
-    }
-
-
-
-    LinkedList(LinkedList&& other) noexcept : head(other.head), tail(other.tail), size(other.size) {
-        other.head = nullptr;
-        other.tail = nullptr;
-        other.size = 0;
-    }
-
-    ~LinkedList() {
-        Clear();
-    }
-
-    void Clear() {
-        Node* current = head;
-        while (current) {
-            Node* next = current->next;
-            delete current;
-            current = next;
->>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
-        }
-        head = tail = nullptr;
-        size = 0;
     }
 
     LinkedList(LinkedList&& other) noexcept : head(other.head), tail(other.tail), size(other.size) {
@@ -178,19 +147,10 @@ public:
 
     LinkedList& operator=(const LinkedList& other) {
         if (this != &other) {
-<<<<<<< HEAD
-            Clear();
-            Node* current = other.head;
-            while (current) {
-                InsertTail(current->data);
-                current = current->next;
-            }
-=======
             LinkedList temp(other);           
             std::swap(head, temp.head);       
             std::swap(tail, temp.tail);
             std::swap(size, temp.size);
->>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
         }
         return *this;
     }
@@ -207,8 +167,6 @@ public:
         }
         return *this;
     }
-<<<<<<< HEAD
-=======
 
     void ForEach(std::function<void(T&)> func) 
     {
@@ -277,7 +235,6 @@ public:
         return end();
     }
 
->>>>>>> 2016326 (Refactor: add ConstIterator and cbegin/cend for const support)
 };
 
 #endif
