@@ -191,22 +191,28 @@ public:
 
         Iterator& operator++() 
         {
-            if (it) it = it->next;
+            if (!it)
+                throw std::out_of_range("going beyond the boundaries");
+            it = it->next;
             return *this;
         }
 
         Iterator operator++(int) 
         {
             Iterator temp = *this;
-            if (it) it = it->next;
+            if (!it) throw std::out_of_range("going beyond the boundaries");
+            it = it->next;
             return temp;
         }
-
 
         bool operator!=(const Iterator& other) const { return it != other.it; }
         bool operator==(const Iterator& other) const { return it == other.it; }
 
-        T& operator*() { return it->data; }
+        T& operator*() 
+        { 
+            if (!it) throw std::out_of_range("dereferencing end()");
+            return it->data; 
+        }
     };
 
     class ConstIterator {
@@ -223,11 +229,24 @@ public:
 
         ConstIterator& operator++() 
         {
-            if (it) it = it->next;
+            if (!it) throw std::out_of_range("going beyond the boundaries");
+            it = it->next;
             return *this;
         }
 
-        const T& operator*() const { return it->data; }
+        Iterator operator++(int) 
+        {
+            Iterator temp = *this;
+            if (!it) throw std::out_of_range("going beyond the boundaries");
+            it = it->next;
+            return temp;
+        }
+
+        const T& operator*() const 
+        {
+            if (!it) throw std::out_of_range("dereferencing end()");
+            return it->data; 
+        }
 
         bool operator!=(const ConstIterator& other) const { return it != other.it; }
         bool operator==(const ConstIterator& other) const { return it == other.it; }
