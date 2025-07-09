@@ -191,8 +191,7 @@ public:
 
         Iterator& operator++() 
         {
-            if (!it)
-                throw std::out_of_range("going beyond the boundaries");
+            if (!it) throw std::out_of_range("going beyond the boundaries");
             it = it->next;
             return *this;
         }
